@@ -1,17 +1,20 @@
-#include <iostream>
-#include <random>
+#include "time.h"
 
-#include <chrono>
-
-#include "philosopher.hpp"
+#include "table.hpp"
 
 int main()
 {
-    int baguetteCount = 5;
+    srand(time(NULL));
 
-    Philosopher Platon("Platon");
-    Philosopher Descartes("Descartes");
-    Philosopher Voltaire("Voltaire");
-    Philosopher Socrate("Socrate");
-    Philosopher Heraclite("Heraclite");
+    Table table;
+
+    table.addAGuess(new Philosopher(&table, "Descartes", 1, 5, 2, 10));
+    table.addAGuess(new Philosopher(&table, "Platon", 1, 5, 2, 10));
+    table.addAGuess(new Philosopher(&table, "Voltaire", 1, 5, 2, 10));
+    table.addAGuess(new Philosopher(&table, "Socrate", 1, 5, 2, 10));
+    table.addAGuess(new Philosopher(&table, "Heraclite", 1, 5, 2, 10));
+
+    table.dinner();
+
+    return 0;
 }

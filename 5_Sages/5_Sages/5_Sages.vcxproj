@@ -116,6 +116,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,11 +140,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="5_Sages.cpp" />
-    <ClCompile Include="sage.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="chopstick.cpp" />
+    <ClCompile Include="speaker.cpp" />
+    <ClCompile Include="wiseman.cpp" />
+    <ClCompile Include="table.cpp" />
+    <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="sage.h" />
+    <ClInclude Include="chopstick.h" />
+    <ClInclude Include="message.h" />
+    <ClInclude Include="speaker.h" />
+    <ClInclude Include="wiseman.h" />
+    <ClInclude Include="table.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

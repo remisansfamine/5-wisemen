@@ -16,15 +16,27 @@ int getColorCode(int foreground, int background)
 	return foreground + background * 16;
 }
 
-void printWithDelay(const std::string& toPrint, int lastCharToPrint, int delay)
+int getClampedInput(bool& isValid, const std::function<void>& lambda, int min, int max)
 {
-    int characterCount = lastCharToPrint <= 0 ? (unsigned int)toPrint.size() : (std::min)(lastCharToPrint, (int)toPrint.size());
-
-    for (int i = 0; i < characterCount; i++)
+    int wisemanCount = 0;
+    isValid = false;
+    while (!isValid)
     {
-        std::cout << toPrint[i];
-        std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+        std::cin >> wisemanCount;
+
+        lambda;
+
+        isValid = wisemanCount > min && wisemanCount < max;
     }
 
-    std::cout << '\0';
+    return wisemanCount;
+}
+
+void printWithDelay(const std::string& toPrint, int delay)
+{
+    for (const char& c : toPrint)
+    {
+        std::cout << c;
+        std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+    }
 }

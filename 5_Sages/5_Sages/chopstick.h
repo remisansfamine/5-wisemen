@@ -13,5 +13,5 @@ public:
 	Wiseman* owner = nullptr;
 
 	bool isTaken();
-	std::string getOwner();
+	std::string getOwnerName();
 };

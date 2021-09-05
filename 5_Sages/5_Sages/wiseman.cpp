@@ -21,7 +21,6 @@ Wiseman::Wiseman(Table* table, const std::string& name, int thinkTimeMin, int th
 
 	printAction("s'assoit a la table, il y a " + std::to_string(wisemanCount) + " baguette(s) a table.", 6, 3);
 
-	thread = std::thread(&Wiseman::think, this);
 }
 
 Wiseman::~Wiseman()
@@ -31,9 +30,14 @@ Wiseman::~Wiseman()
 	thread.join();
 }
 
+void Wiseman::startTheMeal()
+{
+	thread = std::thread(&Wiseman::think, this);
+}
+
 void Wiseman::think()
 {
-	printAction("reflechi au sens de la vie pendant " + std::to_string(currentTimeToThink) + " secondes.", 3);
+	printAction("reflechi a la trajectoire de Leonov pendant " + std::to_string(currentTimeToThink) + " secondes.", 3);
 
 	std::this_thread::sleep_for(std::chrono::seconds(currentTimeToThink));
 
@@ -58,17 +62,23 @@ void Wiseman::tryToEat()
 
 	if (baguetteCount == 0)
 	{
-		printAction("tente de manger mais n'a pas de baguette! " + std::to_string(leftBaguetteIndex) + " (" + leftChopstick.getOwner() + ")" + " et " + std::to_string(rightBaguetteIndex) + " (" + rightChopstick.getOwner() + ").", 4);
+		printAction("tente de manger mais n'a pas de baguette! " + std::to_string(leftBaguetteIndex) + " (" + leftChopstick.getOwnerName() + ")" + " et " + std::to_string(rightBaguetteIndex) + " (" + rightChopstick.getOwnerName() + ").", 4);
 		think();
 	}
 	else if (baguetteCount == 1)
 	{
-		printAction("tente de manger mais n'a qu'une seule pauvre baguette " + std::to_string(leftBaguetteIndex) + " (" + leftChopstick.getOwner() + ")" + " et " + std::to_string(rightBaguetteIndex) + " (" + rightChopstick.getOwner() + ").", 4);
+		printAction("tente de manger mais n'a qu'une seule pauvre baguette " + std::to_string(leftBaguetteIndex) + " (" + leftChopstick.getOwnerName() + ")" + " et " + std::to_string(rightBaguetteIndex) + " (" + rightChopstick.getOwnerName() + ").", 4);
 		think();
 	}
 	else
 	{
+		leftChopstick.m_mutex->lock();
+		rightChopstick.m_mutex->lock();
+
 		leftChopstick.owner = rightChopstick.owner = this;
+
+		leftChopstick.m_mutex->unlock();
+		rightChopstick.m_mutex->unlock();
 
 		eat();
 	}
@@ -87,14 +97,14 @@ void Wiseman::eat()
 	Chopstick& leftChopstick = *table->chopticks[leftBaguetteIndex];
 	Chopstick& rightChopstick = *table->chopticks[rightBaguetteIndex];
 
-	leftChopstick.m_mutex->lock();
-	rightChopstick.m_mutex->lock();
-
-	printAction("est en train de manger un delicieux repas pendant " + std::to_string(currentTimeToEat) + " secondes en prenant les baguettes.", 2);
+	printAction("est en train de manger un delicieux repas pendant " + std::to_string(currentTimeToEat) + " secondes en prenant les baguettes " + std::to_string(leftBaguetteIndex) + " et " + std::to_string(rightBaguetteIndex) + ".", 2);
 
 	std::this_thread::sleep_for(std::chrono::seconds(currentTimeToEat));
 
 	timeToEat -= currentTimeToEat;
+
+	leftChopstick.m_mutex->lock();
+	rightChopstick.m_mutex->lock();
 
 	printAction("repose les baguettes " + std::to_string(leftBaguetteIndex) + " et " + std::to_string(rightBaguetteIndex) + ".");
 

@@ -5,7 +5,7 @@ bool Chopstick::isTaken()
 	return owner;
 }
 
-std::string Chopstick::getOwner()
+std::string Chopstick::getOwnerName()
 {
 	return owner ? owner->name : "Personne";
 }

@@ -10,13 +10,13 @@ class Table
 {
 	std::vector<std::unique_ptr<Wiseman>> wisemen;
 
-	std::thread castThread;
-
 public:
+	void init();
+
 	std::vector<std::unique_ptr<Chopstick>> chopticks;
 	Speaker speaker;
 
 	void addAGuess(Wiseman* guess);
 
-	void dinner();
+	void startDinner();
 };

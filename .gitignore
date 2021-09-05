@@ -1,5 +1,5 @@
-5_Sages/.vs
-5_Sages/Debug
-5_Sages/x64
-5_Sages/5_Sages/x64
-5_Sages/5_Sages/Debug
+5_Sages/.vs/**
+5_Sages/Debug/**
+5_Sages/x64/**
+5_Sages/5_Sages/x64/**
+5_Sages/5_Sages/Debug/**

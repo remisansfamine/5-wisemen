@@ -17,7 +17,7 @@ class Wiseman
 
 	std::thread thread;
 
-	int timeToEat = 60;
+	int timeToEat = 20;
 
 	int currentTimeToEat;
 	int currentTimeToThink;
@@ -35,8 +35,10 @@ public:
 
 	bool hasFinished = false;
 
-	Wiseman(Table* table, const std::string& name, int thinkTimeMin, int thinkTimeMax, int eatTimeMin, int eatTimeMax);
+	Wiseman(Table* table, const std::string& name, int thinkTimeMin = 1, int thinkTimeMax = 5, int eatTimeMin = 2, int eatTimeMax = 10);
 	~Wiseman();
+
+	void startTheMeal();
 
 	void think();
 	void tryToEat();

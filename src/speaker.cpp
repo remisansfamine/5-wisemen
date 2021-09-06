@@ -1,50 +1,71 @@
 #include "speaker.hpp"
 
-#include <iostream>
+#include "time.h"
+
+#include "utils.hpp"
 
 Speaker::Speaker()
+    : info({ "HAL 9000", 1 }), castThread(&Speaker::castMessages, this)
 {
-    castThread = std::thread(&Speaker::castMessages, this);
-
-    info = { "Antiphon", 1 };
-
-    sendMessage({ info, "Bonjour, je m'appelle Antiphon, je vais vous narrer le deroulement d'un repas presque parfait.\n" });
+    narrate("Bonjour, je suis HAL 9000. Vous vous trouvez a bord d'une reproduction de Leonov.\n");
+    narrate("En 2010 se deroula dans ce vaiseau un repas rassemblant les plus grands scientifiques du XXIe siecle.\n");
+    narrate("Ce repas se deroula autour de plats de ramen.\n");
+    narrate("Malheureusement pour eux, David Bowman n'avait pas amene avec lui assez de baguettes lors de son voyage vers Jupiter en 2001.\n");
 }
 
 Speaker::~Speaker()
 {
-    sendMessage({ info, "Ce dernier coup de baguette marqua la fin du repas, tout le monde se leva et vaqua." });
-
     castThread.join();
-    mealIsOver = true;
 }
 
 void Speaker::castMessages()
 {
+    castStart = std::chrono::system_clock::now();
+
+    printWithDelay("+===================================================================================================\n");
+
     while (!mealIsOver)
     {
+        std::lock_guard<std::mutex> lock(castMutex);
+
         while (!messages.empty())
         {
-            std::lock_guard<std::mutex> lock(castMutex);
-
             Message& message = messages.front();
 
-            SetConsoleTextAttribute(consoleHandler, getColorCode(message.sender.textColor, 15));
-            std::cout << message.sender.name;
-
-            SetConsoleTextAttribute(consoleHandler, getColorCode(message.foregroundColor, message.backgroundColor));
-            std::cout << " " << message.action;
-
-            SetConsoleTextAttribute(consoleHandler, getColorCode(15, 0));
+            message.display();
 
             messages.pop();
         }
     }
+
+    printWithDelay("+===================================================================================================\n");
 }
 
-void Speaker::sendMessage(const Message& message)
+void Speaker::stopMeal()
+{
+    narrate("Ce dernier coup de baguette marqua la fin du repas, tout le monde se leva et vaqua.\n");
+
+    auto now = std::chrono::system_clock::now();
+    std::string timeAsString = std::to_string(std::chrono::duration_cast<std::chrono::minutes>(now - castStart).count());
+
+    narrate("Cet representation holographique de " + timeAsString + " minutes fut inspire par la tetralogie d'Arthur C. Clarke: l'Odyssee de l'espace.\n");
+
+    mealIsOver = true;
+}
+
+bool Speaker::isCastFinished()
+{
+    return messages.empty();
+}
+
+void Speaker::narrate(const std::string& action)
+{
+    sendMessage(info, { action });
+}
+
+void Speaker::sendMessage(const SenderInfo& sender, const std::string& action, int foregroundColor, int backgroundColor, const std::time_t& time)
 {
     std::lock_guard<std::mutex> lock(castMutex);
 
-    messages.push(message);
+    messages.push(Message(sender, action, foregroundColor, backgroundColor, time));
 }

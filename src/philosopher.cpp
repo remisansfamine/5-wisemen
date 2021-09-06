@@ -6,22 +6,17 @@
 
 int Philosopher::wisemanCount = 0;
 
-Philosopher::Philosopher(Table* table, const std::string& name, int thinkTimeMin, int thinkTimeMax, int eatTimeMin, int eatTimeMax)
-	: table(table), name(name)
+Philosopher::Philosopher(Speaker& speaker, std::vector<std::unique_ptr<Chopstick>>& chopticks, const std::string& name, int minTimeToThink, int maxTimeToThink, int minTimeToEat, int maxTimeToEat)
+	: speaker(speaker), chopticks(chopticks), name(name), minTimeToThink(minTimeToThink), maxTimeToThink(maxTimeToThink), minTimeToEat(minTimeToEat), maxTimeToEat(maxTimeToEat)
 {
-	currentTimeToEat = randomFromRange(eatTimeMin, eatTimeMax);
-	currentTimeToThink = randomFromRange(thinkTimeMin, thinkTimeMax);
-
 	index = wisemanCount;
 	wisemanCount++;
 
 	info = { name, index + 1 };
 
-	table->chopticks.push_back(std::unique_ptr<Chopstick>(new Chopstick()));
+	chopticks.push_back(std::unique_ptr<Chopstick>(new Chopstick()));
 
 	printAction("s'assoit a la table, il y a " + std::to_string(wisemanCount) + " baguette(s) a table.", 6, 3);
-
-	thread = std::thread(&Philosopher::think, this);
 }
 
 Philosopher::~Philosopher()
@@ -31,9 +26,17 @@ Philosopher::~Philosopher()
 	thread.join();
 }
 
+void Philosopher::startTheMeal()
+{
+	thread = std::thread(&Philosopher::think, this);
+}
+
 void Philosopher::think()
 {
-	printAction("reflechi au sens de la vie pendant " + std::to_string(currentTimeToThink) + " secondes.", 3);
+	int currentTimeToThink = randomFromRange(minTimeToThink, maxTimeToThink);
+
+	std::string thinkingSentence = getRandomInRange(thinkingSentences, 0, (int)thinkingSentences.size());
+	printAction(thinkingSentence + " pendant " + std::to_string(currentTimeToThink) + " secondes.", 3);
 
 	std::this_thread::sleep_for(std::chrono::seconds(currentTimeToThink));
 
@@ -47,8 +50,8 @@ void Philosopher::tryToEat()
 	int leftBaguetteIndex = index;
 	int rightBaguetteIndex = (index + 1) % wisemanCount;
 
-	Chopstick& leftChopstick = *table->chopticks[leftBaguetteIndex];
-	Chopstick& rightChopstick = *table->chopticks[rightBaguetteIndex];
+	Chopstick& leftChopstick = *chopticks[leftBaguetteIndex];
+	Chopstick& rightChopstick = *chopticks[rightBaguetteIndex];
 
 	if (!leftChopstick.isTaken())
 		baguetteCount++;
@@ -58,25 +61,26 @@ void Philosopher::tryToEat()
 
 	if (baguetteCount == 0)
 	{
-		printAction("tente de manger mais n'a pas de baguette! " + std::to_string(leftBaguetteIndex) + " (" + leftChopstick.getOwner() + ")" + " et " + std::to_string(rightBaguetteIndex) + " (" + rightChopstick.getOwner() + ").", 4);
+		printAction("tente de manger mais n'a pas de baguette! " + std::to_string(leftBaguetteIndex) + " (" + leftChopstick.getOwnerName() + ")" + " et " + std::to_string(rightBaguetteIndex) + " (" + rightChopstick.getOwnerName() + ").", 4);
 		think();
 	}
 	else if (baguetteCount == 1)
 	{
-		printAction("tente de manger mais n'a qu'une seule pauvre baguette " + std::to_string(leftBaguetteIndex) + " (" + leftChopstick.getOwner() + ")" + " et " + std::to_string(rightBaguetteIndex) + " (" + rightChopstick.getOwner() + ").", 4);
+		printAction("tente de manger mais n'a qu'une seule pauvre baguette " + std::to_string(leftBaguetteIndex) + " (" + leftChopstick.getOwnerName() + ")" + " et " + std::to_string(rightBaguetteIndex) + " (" + rightChopstick.getOwnerName() + ").", 4);
 		think();
 	}
 	else
 	{
-		leftChopstick.owner = rightChopstick.owner = this;
+		leftChopstick.setOwner(this);
+		rightChopstick.setOwner(this);
 
 		eat();
 	}
 }
 
-void Philosopher::printAction(const std::string& action, int foregroundColor, int backgroundColor)
+void Philosopher::printAction(const std::string& action, int foregroundColor, int backgroundColor, const std::time_t& time)
 {
-	table->speaker.sendMessage({ info, action + '\n', foregroundColor, backgroundColor });
+	speaker.sendMessage(info, action + '\n', foregroundColor, backgroundColor, time);
 }
 
 void Philosopher::eat()
@@ -84,13 +88,13 @@ void Philosopher::eat()
 	int leftBaguetteIndex = index;
 	int rightBaguetteIndex = (index + 1) % wisemanCount;
 
-	Chopstick& leftChopstick = *table->chopticks[leftBaguetteIndex];
-	Chopstick& rightChopstick = *table->chopticks[rightBaguetteIndex];
+	Chopstick& leftChopstick = *chopticks[leftBaguetteIndex];
+	Chopstick& rightChopstick = *chopticks[rightBaguetteIndex];
 
-	leftChopstick.m_mutex->lock();
-	rightChopstick.m_mutex->lock();
+	int currentTimeToEat = randomFromRange(minTimeToEat, maxTimeToEat);
 
-	printAction("est en train de manger un delicieux repas pendant " + std::to_string(currentTimeToEat) + " secondes en prenant les baguettes.", 2);
+	std::string eatingSentence = getRandomInRange(eatingSentences, 0, (int)eatingSentences.size());
+	printAction(eatingSentence + " pendant " + std::to_string(currentTimeToEat) + " secondes en prenant les baguettes " + std::to_string(leftBaguetteIndex) + " et " + std::to_string(rightBaguetteIndex) + ".", 2);
 
 	std::this_thread::sleep_for(std::chrono::seconds(currentTimeToEat));
 
@@ -98,10 +102,8 @@ void Philosopher::eat()
 
 	printAction("repose les baguettes " + std::to_string(leftBaguetteIndex) + " et " + std::to_string(rightBaguetteIndex) + ".");
 
-	leftChopstick.owner = rightChopstick.owner = nullptr;
-
-	leftChopstick.m_mutex->unlock();
-	rightChopstick.m_mutex->unlock();
+	leftChopstick.setOwner(nullptr);
+	rightChopstick.setOwner(nullptr);
 
 	if (timeToEat <= 0)
 	{
@@ -110,7 +112,7 @@ void Philosopher::eat()
 	}
 	else
 	{
-		printAction("compte manger encore " + std::to_string(timeToEat) + "s.");
+		printAction("compte manger encore " + std::to_string(timeToEat) + " secondes.");
 		think();
 	}
 }

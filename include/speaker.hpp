@@ -6,8 +6,6 @@
 #include <queue>
 #include <string>
 
-#include <windows.h>
-
 #include "message.hpp"
 
 #include "utils.hpp"
@@ -20,19 +18,25 @@ private:
 	std::thread castThread;
 	std::mutex castMutex;
 		
-	void castMessages();
-
 	bool isUsed = false;
-
-	HANDLE consoleHandler = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	SenderInfo info;
 
-public:
 	bool mealIsOver = false;
 
+	std::chrono::system_clock::time_point castStart;
+
+	void castMessages();
+
+public:
 	Speaker();
 	~Speaker();
 
-	void sendMessage(const Message& message);
+	void stopMeal();
+
+	bool isCastFinished();
+
+	void narrate(const std::string& action);
+
+	void sendMessage(const SenderInfo& sender, const std::string& action, int foregroundColor = 15, int backgroundColor = 0, const std::time_t& time = std::time(0));
 };

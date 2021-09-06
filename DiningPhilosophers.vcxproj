@@ -149,12 +149,13 @@
     <ClCompile Include="src\philosopher.cpp" />
     <ClCompile Include="src\table.cpp" />
     <ClCompile Include="src\utils.cpp" />
+    <ClCompile Include="src\message.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\chopstick.hpp" />
     <ClInclude Include="include\message.hpp" />
-    <ClInclude Include="include\speaker.hpp" />
     <ClInclude Include="include\philosopher.hpp" />
+    <ClInclude Include="include\speaker.hpp" />
     <ClInclude Include="include\table.hpp" />
     <ClInclude Include="include\utils.hpp" />
   </ItemGroup>

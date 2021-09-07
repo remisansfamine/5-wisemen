@@ -10,8 +10,11 @@ class Table
 {
 	std::vector<std::unique_ptr<Wiseman>> wisemen;
 
+<<<<<<< HEAD
 	Speaker speaker;
 
+=======
+>>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 public:
 	void init();
 

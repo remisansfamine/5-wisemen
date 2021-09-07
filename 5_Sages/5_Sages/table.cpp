@@ -9,6 +9,8 @@ void Table::init()
 
     bool isValid = false;
 
+    // Get the wiseman count
+
     int wisemanCount = 0;
     while (!isValid)
     {
@@ -21,14 +23,17 @@ void Table::init()
             speaker.narrate("Ce repas avait etait organise pour avoir au minimum deux invites.\n");
     }
 
+    // Get all the wisemen name
 
     speaker.narrate("Le premier invite etait: ");
     bool canLeave = false;
     do
     {
+        // Get the name
         std::string wisemanName;
         std::getline(std::cin >> std::ws, wisemanName);
 
+        // Add a wiseman
         addAGuess(new Wiseman(speaker, chopticks, wisemanName));
 
         canLeave = wisemen.size() >= wisemanCount;
@@ -50,6 +55,8 @@ void Table::startDinner()
 
     for (auto& wiseman : wisemen)
         wiseman->startTheMeal();
+
+    // Update the wisemen, to avoid infinite loop
 
     while (!wisemen.empty())
     {

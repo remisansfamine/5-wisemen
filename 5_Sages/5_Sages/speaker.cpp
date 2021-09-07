@@ -6,6 +6,7 @@
 Speaker::Speaker()
     : info({ "HAL 9000", 1 }), castThread(&Speaker::castMessages, this)
 {
+    // Display the speaker informations
     narrate("Bonjour, je suis HAL 9000. Vous vous trouvez a bord d'une reproduction de Leonov.\n");
     narrate("En 2010 se deroula dans ce vaiseau un repas rassemblant les plus grands scientifiques du XXIe siecle.\n");
     narrate("Ce repas se deroula autour de plats de ramen.\n");
@@ -21,6 +22,8 @@ void Speaker::castMessages()
 {
     castStart = std::chrono::system_clock::now();
 
+    // Display the cast initialisation informations
+
     printWithDelay("\n\n * Cette representation holographique a besoin d'informations entrees manuellement pour pouvoir fonctionner.\n");
     printWithDelay("   Pour les prochaines informations demandees, veuillez entrer des valeurs numeriques non-nulles.\n");
 
@@ -35,16 +38,19 @@ void Speaker::castMessages()
 
     printWithDelay("+===================================================================================================\n|\n");
 
+    // Display all informations while the meal is not finished
     while (!isCastFinished())
     {
         std::lock_guard<std::mutex> lock(castMutex);
 
+        // While the queue is not empty, use it and pop it
         while (!messages.empty())
         {
             Message& message = messages.front();
 
             message.display();
 
+            // Pop the current message
             messages.pop();
         }
     }
@@ -55,6 +61,8 @@ void Speaker::stopMeal()
 {
     if (mealIsOver)
         return;
+
+    // Display the meal ending informations
 
     narrate("Ce dernier coup de baguette marqua la fin du repas, tout le monde se leva et vaqua.\n");
 

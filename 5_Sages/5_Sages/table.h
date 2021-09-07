@@ -10,11 +10,12 @@ class Table
 {
 	std::vector<std::unique_ptr<Wiseman>> wisemen;
 
+	Speaker speaker;
+
 public:
 	void init();
 
 	std::vector<std::unique_ptr<Chopstick>> chopticks;
-	Speaker speaker;
 
 	void addAGuess(Wiseman* guess);
 

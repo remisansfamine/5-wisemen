@@ -5,7 +5,7 @@
 
 void Table::init()
 {
-    speaker.narrate("Ce repas fut organise apres quelques jours de preparation, le temps de synchroniser les emplois du temps.\n");
+    Wiseman::askGlobalInformations(speaker);
 
     bool isValid = false;
 
@@ -22,16 +22,8 @@ void Table::init()
     }
 
 
-
     speaker.narrate("Le premier invite etait: ");
-
     bool canLeave = false;
-
-    int minEating;
-    int maxEating;
-    int minThinking;
-    int maxThinking;
-
     do
     {
         std::string wisemanName;
@@ -63,7 +55,7 @@ void Table::startDinner()
     {
         for (auto wisemanIt = wisemen.begin(); wisemanIt != wisemen.end(); )
         {
-            if (wisemanIt->get()->hasFinished)
+            if (wisemanIt->get()->hasFinished())
                 wisemanIt = wisemen.erase(wisemanIt);
             else
                 wisemanIt++;

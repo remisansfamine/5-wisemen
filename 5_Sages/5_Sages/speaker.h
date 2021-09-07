@@ -13,16 +13,14 @@
 class Speaker
 {
 private:
+	bool mealIsOver = false;
+	
 	std::queue<Message> messages = std::queue<Message>();
 
 	std::thread castThread;
 	std::mutex castMutex;
-		
-	bool isUsed = false;
 
 	SenderInfo info;
-
-	bool mealIsOver = false;
 
 	std::chrono::system_clock::time_point castStart;
 

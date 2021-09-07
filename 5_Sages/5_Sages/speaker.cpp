@@ -21,9 +21,21 @@ void Speaker::castMessages()
 {
     castStart = std::chrono::system_clock::now();
 
-    printWithDelay("+===================================================================================================\n");
+    printWithDelay("\n\n * Cette representation holographique a besoin d'informations entrees manuellement pour pouvoir fonctionner.\n");
+    printWithDelay("   Pour les prochaines informations demandees, veuillez entrer des valeurs numeriques non-nulles.\n");
 
-    while (!mealIsOver)
+    printWithDelay("\n\n * Pour une meilleure experience utilisateur: veuillez vous mettre en plein-ecran.\n\n");
+    printWithDelay("----------------------------------------------------------------------------------------------------\n");
+    printWithDelay("\nOuverture de l'archive...\n", 64, 100);
+    printWithDelay("\nAcces donnees HAL 9000...\n", 64, 100);
+    printWithDelay("\nHAL 9000 - Initialisation...\n", 64, 100);
+    printWithDelay("\nDemande d'acces aux inputs en cours...\n", 64, 100);
+    printWithDelay("\nDemarrage des systemes neronaux...\n\n", 64, 100);
+    printWithDelay("----------------------------------------------------------------------------------------------------\n\n");
+
+    printWithDelay("+===================================================================================================\n|\n");
+
+    while (!isCastFinished())
     {
         std::lock_guard<std::mutex> lock(castMutex);
 
@@ -36,30 +48,33 @@ void Speaker::castMessages()
             messages.pop();
         }
     }
-
-    printWithDelay("+===================================================================================================\n");
+    printWithDelay("|\n+===================================================================================================\n");
 }
 
 void Speaker::stopMeal()
 {
+    if (mealIsOver)
+        return;
+
     narrate("Ce dernier coup de baguette marqua la fin du repas, tout le monde se leva et vaqua.\n");
 
     auto now = std::chrono::system_clock::now();
     std::string timeAsString = std::to_string(std::chrono::duration_cast<std::chrono::minutes>(now - castStart).count());
 
     narrate("Cet representation holographique de " + timeAsString + " minutes fut inspire par la tetralogie d'Arthur C. Clarke: l'Odyssee de l'espace.\n");
+    narrate("A l'occasion de son 227ieme anniversaire.\n");
 
     mealIsOver = true;
 }
 
 bool Speaker::isCastFinished()
 {
-    return messages.empty();
+    return messages.empty() && mealIsOver;
 }
 
 void Speaker::narrate(const std::string& action)
 {
-    sendMessage(info, { action });
+    sendMessage(info, action);
 }
 
 void Speaker::sendMessage(const SenderInfo& sender, const std::string& action, int foregroundColor, int backgroundColor, const std::time_t& time)

@@ -57,10 +57,6 @@ Wiseman::Wiseman(Speaker& speaker, std::vector<std::unique_ptr<Chopstick>>& chop
 	chopticks.push_back(std::unique_ptr<Chopstick>(new Chopstick()));
 
 	printAction("s'assoit a la table, il y a " + std::to_string(wisemanCount) + " baguette(s) a table.", 6, 3);
-<<<<<<< HEAD
-=======
-
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 }
 
 Wiseman::~Wiseman()
@@ -75,7 +71,6 @@ void Wiseman::startTheMeal()
 	thread = std::thread(&Wiseman::think, this);
 }
 
-<<<<<<< HEAD
 std::string Wiseman::getName()
 {
 	return name;
@@ -92,11 +87,6 @@ void Wiseman::think()
 
 	std::string thinkingSentence = getRandomInRange(thinkingSentences, 0, (int)thinkingSentences.size());
 	printAction(thinkingSentence + " pendant " + std::to_string(currentTimeToThink) + " secondes.", 3);
-=======
-void Wiseman::think()
-{
-	printAction("reflechi a la trajectoire de Leonov pendant " + std::to_string(currentTimeToThink) + " secondes.", 3);
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 
 	std::this_thread::sleep_for(std::chrono::seconds(currentTimeToThink));
 
@@ -121,38 +111,20 @@ void Wiseman::tryToEat()
 
 	if (baguetteCount == 0)
 	{
-<<<<<<< HEAD
 		printAction("tente de manger mais n'a pas de baguette! Iel aimerait avoir les baguettes " + std::to_string(leftBaguetteIndex) + " et " + std::to_string(rightBaguetteIndex) + " qu'utilisent " + leftChopstick.getOwnerName() +  " et " + rightChopstick.getOwnerName() + ".", 4);
-=======
-		printAction("tente de manger mais n'a pas de baguette! " + std::to_string(leftBaguetteIndex) + " (" + leftChopstick.getOwnerName() + ")" + " et " + std::to_string(rightBaguetteIndex) + " (" + rightChopstick.getOwnerName() + ").", 4);
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 		think();
 	}
 	else if (baguetteCount == 1)
 	{
-<<<<<<< HEAD
 		int neededChopstickIndex = leftChopstick.isTaken() ? leftBaguetteIndex : rightBaguetteIndex;
 
 		printAction("tente de manger mais n'a qu'une seule pauvre baguette, iel lui manque la baguette " + std::to_string(neededChopstickIndex) + " qu'occupe " + chopticks[neededChopstickIndex]->getOwnerName() + ".", 4);
-=======
-		printAction("tente de manger mais n'a qu'une seule pauvre baguette " + std::to_string(leftBaguetteIndex) + " (" + leftChopstick.getOwnerName() + ")" + " et " + std::to_string(rightBaguetteIndex) + " (" + rightChopstick.getOwnerName() + ").", 4);
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 		think();
 	}
 	else
 	{
-<<<<<<< HEAD
 		leftChopstick.setOwner(this);
 		rightChopstick.setOwner(this);
-=======
-		leftChopstick.m_mutex->lock();
-		rightChopstick.m_mutex->lock();
-
-		leftChopstick.owner = rightChopstick.owner = this;
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
-
-		leftChopstick.m_mutex->unlock();
-		rightChopstick.m_mutex->unlock();
 
 		eat();
 	}
@@ -170,19 +142,12 @@ void Wiseman::eat()
 
 	int currentTimeToEat = randomFromRange(minTimeToEat, maxTimeToEat);
 
-<<<<<<< HEAD
 	std::string eatingSentence = getRandomInRange(eatingSentences, 0, (int)eatingSentences.size());
 	printAction(eatingSentence + " pendant " + std::to_string(currentTimeToEat) + " secondes en prenant les baguettes " + std::to_string(leftBaguetteIndex) + " et " + std::to_string(rightBaguetteIndex) + ".", 2);
-=======
-	printAction("est en train de manger un delicieux repas pendant " + std::to_string(currentTimeToEat) + " secondes en prenant les baguettes " + std::to_string(leftBaguetteIndex) + " et " + std::to_string(rightBaguetteIndex) + ".", 2);
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 
 	std::this_thread::sleep_for(std::chrono::seconds(currentTimeToEat));
 
 	timeToEat -= currentTimeToEat;
-
-	leftChopstick.m_mutex->lock();
-	rightChopstick.m_mutex->lock();
 
 	printAction("repose les baguettes " + std::to_string(leftBaguetteIndex) + " et " + std::to_string(rightBaguetteIndex) + ".");
 

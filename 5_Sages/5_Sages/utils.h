@@ -1,20 +1,16 @@
 #pragma once
 
 #include <string>
-<<<<<<< HEAD
 #include <vector>
 #include <time.h>
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
-=======
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 
 int randomFromRange(int min, int max);
 
 int getColorCode(int foreground, int background);
 
-<<<<<<< HEAD
 void printWithDelay(const std::string& toPrint, int lastCharToPrint = 0, int delay = 3);
 
 template <typename T>
@@ -36,6 +32,3 @@ std::string getTimeAsString(const std::string& format, std::time_t currentTime =
 
     return std::string(timeString);
 }
-=======
-void printWithDelay(const std::string& toPrint, int delay = 10);
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467

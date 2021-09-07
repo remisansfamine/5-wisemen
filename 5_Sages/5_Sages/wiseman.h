@@ -19,11 +19,7 @@ private:
 
 	std::thread thread;
 
-<<<<<<< HEAD
 	Speaker& speaker;
-=======
-	int timeToEat = 20;
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 
 	SenderInfo info;
 
@@ -57,25 +53,15 @@ private:
 
 	static int askValidInformation(Speaker& speaker, const std::string& question);
 
-<<<<<<< HEAD
 public:
 	Wiseman(Speaker& speaker, std::vector<std::unique_ptr<Chopstick>>& chopticks, const std::string& name);
-=======
-	Wiseman(Table* table, const std::string& name, int thinkTimeMin = 1, int thinkTimeMax = 5, int eatTimeMin = 2, int eatTimeMax = 10);
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 	~Wiseman();
 
 	void startTheMeal();
 
-<<<<<<< HEAD
 	std::string getName();
 
 	bool hasFinished();
-=======
-	void think();
-	void tryToEat();
-	void eat();
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 
 	static void askGlobalInformations(Speaker& speaker);
 };

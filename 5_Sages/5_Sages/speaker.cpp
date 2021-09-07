@@ -1,39 +1,19 @@
 #include "speaker.h"
 
 #include "utils.h"
-<<<<<<< HEAD
 #include "time.h"
-=======
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 
 Speaker::Speaker()
     : info({ "HAL 9000", 1 }), castThread(&Speaker::castMessages, this)
 {
-<<<<<<< HEAD
     narrate("Bonjour, je suis HAL 9000. Vous vous trouvez a bord d'une reproduction de Leonov.\n");
     narrate("En 2010 se deroula dans ce vaiseau un repas rassemblant les plus grands scientifiques du XXIe siecle.\n");
     narrate("Ce repas se deroula autour de plats de ramen.\n");
     narrate("Malheureusement pour eux, David Bowman n'avait pas amene avec lui assez de baguettes lors de son voyage vers Jupiter en 2001.\n");
-=======
-    castThread = std::thread(&Speaker::castMessages, this);
-
-    info = { "HAL 9000", 1 };
-
-    sendMessage({ info, "Bonjour, je suis HAL 9000. Vous vous trouvez a bord d'une reproduction de Leonov.\n" });
-    sendMessage({ info, "En 2010 se deroula dans ce vaiseau un repas rassemblant les plus grands scientifiques du XXIe siecle.\n" });
-    sendMessage({ info, "Ce repas ce deroula autour de plats de ramen.\n" });
-    sendMessage({ info, "Malheureusement pour eux, David Bowman n'avait pas amene avec lui assez de baguettes lors de son voyage vers Jupiter en 2001.\n" });
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 }
 
 Speaker::~Speaker()
 {
-<<<<<<< HEAD
-=======
-    sendMessage({ info, "Ce dernier coup de baguette marqua la fin du repas, tout le monde se leva et vaqua." });
-    sendMessage({ info, "Cet representation d'hologramme fut inspire par la tetralogie d'Arthur C. Clarke: l'Odyssee de l'espace." });
-
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
     castThread.join();
 }
 
@@ -63,17 +43,7 @@ void Speaker::castMessages()
         {
             Message& message = messages.front();
 
-<<<<<<< HEAD
             message.display();
-=======
-            SetConsoleTextAttribute(consoleHandler, getColorCode(message.sender.textColor, 15));
-            printWithDelay(message.sender.name);
-
-            SetConsoleTextAttribute(consoleHandler, getColorCode(message.foregroundColor, message.backgroundColor));
-            printWithDelay(" " + message.action);
-
-            SetConsoleTextAttribute(consoleHandler, getColorCode(15, 0));
->>>>>>> 45270cf2da9cbc94239532d6ebd43be4581e5467
 
             messages.pop();
         }

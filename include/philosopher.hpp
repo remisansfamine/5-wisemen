@@ -2,7 +2,6 @@
 
 #include <thread>
 #include <mutex>
-#include <atomic>
 
 #include <vector>
 #include <memory>
@@ -16,18 +15,9 @@ class Chopstick;
 class Philosopher
 {
 private:
-	std::thread thread;
-
-	int timeToEat = 20;
-
-	int minTimeToEat;
-	int maxTimeToEat;
-	int minTimeToThink;
-	int maxTimeToThink;
-
-	static int wisemanCount;
-
 	int index = 0;
+
+	std::thread thread;
 
 	Speaker& speaker;
 
@@ -48,17 +38,30 @@ private:
 
 	std::vector<std::string> thinkingSentences = { "se demande si le monolith est reellement de nature extraterrestre",
 												   "se questionne sur ce que pouvait bien faire Bowman avant ses repas",
-												   "se demande s'il ne devrait pas ramener ses propres baguettes",
+												   "se demande si iel ne devrait pas ramener ses propres baguettes",
 												   "reflechi sur la trajectoire de Leonov" };
 
-public:
 	std::string name;
+	bool finished = false;
 
-	bool hasFinished = false;
+	static int timeToEat;
+	static int minTimeToEat;
+	static int maxTimeToEat;
+	static int minTimeToThink;
+	static int maxTimeToThink;
+	static int wisemanCount;
 
-	Philosopher(Speaker& speaker, std::vector<std::unique_ptr<Chopstick>>& chopticks, const std::string& name, int minTimeToThink = 1, int maxTimeToThink = 5, int minTimeToEat = 2, int maxTimeToEat = 10);
+	static int askValidInformation(Speaker& speaker, const std::string& question);
+
+public:
+	Philosopher(Speaker& speaker, std::vector<std::unique_ptr<Chopstick>>& chopticks, const std::string& name);
 	~Philosopher();
 
 	void startTheMeal();
 
+	std::string getName();
+
+	bool hasFinished();
+
+	static void askGlobalInformations(Speaker& speaker);
 };

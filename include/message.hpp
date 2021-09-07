@@ -15,15 +15,13 @@ class Message
 {
 private:
 	static HANDLE consoleHandler;
-
-public:
 	SenderInfo sender;
 	std::string action;
 	int foregroundColor = 15;
 	int backgroundColor = 0;
+	std::time_t sendingTime;
 
-	std::string timeAsString;
-
+public:
 	Message(const SenderInfo& sender, const std::string& action, int foregroundColor = 15, int backgroundColor = 0, const std::time_t& time = std::time(0));
 
 	void display();
